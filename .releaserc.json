@@ -1,0 +1,29 @@
+{
+  "branches": [
+    {
+      "name": "master"
+    },
+    {
+      "name": "develop",
+      "prerelease": true
+    }
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "python3 -u dev/package.py \"${nextRelease.version}\""
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "successComment": false,
+        "failComment": false,
+        "assets": [{ "path": "*.zip" }, { "path": "manifest.json" }]
+      }
+    ]
+  ]
+}
