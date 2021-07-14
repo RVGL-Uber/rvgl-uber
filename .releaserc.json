@@ -14,7 +14,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "python3 -u dev/package.py \"${nextRelease.version}\""
+        "prepareCmd": "mv dev/info.json . && python3 -u dev/package.py \"${nextRelease.version}\""
       }
     ],
     [

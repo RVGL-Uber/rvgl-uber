@@ -1,0 +1,18 @@
+[
+  {
+    "name": "*-line-hd",
+    "description": "AI-upscaled texture pack (aggressive mode) (512x512)"
+  },
+  {
+    "name": "*-line-uhd",
+    "description": "AI-upscaled texture pack (aggressive mode) (1024x1024)"
+  },
+  {
+    "name": "*-standard-hd",
+    "description": "AI-upscaled texture pack (conservative mode) (512x512)"
+  },
+  {
+    "name": "*-standard-uhd",
+    "description": "AI-upscaled texture pack (conservative mode) (1024x1024)"
+  }
+]

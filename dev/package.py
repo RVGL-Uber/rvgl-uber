@@ -5,9 +5,13 @@ import hashlib
 import json
 import sys
 from typing import Any, Dict
+from fnmatch import fnmatch
+
+info_path = Path("info.json")
 
 
 def make_zip(src_file: Path):
+    print("Packing " + src_file.name)
     shutil.make_archive(src_file.name, "zip", str(src_file))
 
 
@@ -24,6 +28,9 @@ if __name__ == "__main__":
         print("Usage: package.py VERSION_NAME")
         raise Exception("Invalid usage")
 
+    if not info_path.exists():
+        raise Exception("info.json does not exist: " + str(info_path))
+
     # only semantic version supported, e.g. 1.0.0
     raw_version = sys.argv[1]
     major, minor, patch = (int(i) for i in raw_version.split("."))
@@ -35,21 +42,24 @@ if __name__ == "__main__":
     # major = M, minor = m, patch = p: MM.mmpp
     float_version = major + minor / 100 + patch / 10000
 
+    with open("info.json") as f:
+        info = json.load(f)
+
     with multiprocessing.Pool() as pool:
         manager = multiprocessing.Manager()
         manifest: Dict[Any, Any] = {
-            "name": "RVGL Uber Content Packs",
+            "name": "Re-Volt Uber Packs",
             "version": float_version,
             "packages": {},
         }
         pool.map(make_zip, tuple(filter(lambda x: x.is_dir(), Path("src").iterdir())))
         for src_zip, sha in pool.map(apply_zip, Path(".").glob("*.zip")):
             manifest["packages"][src_zip.stem] = {
-                "description": "An AI-upscaled texture pack for all stock game assets.",
+                "description": next(f["description"] for f in info if fnmatch(src_zip.stem, f["name"])),
                 "version": float_version,
                 "checksum": sha,
                 "url": f"https://github.com/RVGL-Uber/rvgl-uber/releases/download/v{raw_version}/{src_zip.name}",
             }
 
-    with open("manifest.json", "w") as src_file:
-        src_file.write(json.dumps(manifest, sort_keys=True, indent=4))
+    with open("manifest.json", "w") as f:
+        f.write(json.dumps(manifest, sort_keys=True, indent=4))
