@@ -5,6 +5,9 @@ platform:
   os: linux
   arch: amd64
 
+clone:
+  depth: 1
+
 steps:
   - name: release
     image: node:16.5
