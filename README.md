@@ -47,16 +47,16 @@ All development tools can be found under the [dev/](dev/) directory. A typical d
 
 1. ### Prepare the assets
 
-   `python3 build.py pre "C:\Users\<USER>\AppData\Local\rvmm\packs" "-standard"`
+   `python3 build.py pre "C:\Users\<USER>\AppData\Local\rvmm\packs" "standard"`
 
-   This will generate a bunch of new directories like `uber-game_files-standard`. For convenience, move them all into a new directory called `uber-standard`.
+   This will generate a bunch of new directories like `uber-standard-game_files`. For convenience, move them all into a new directory called `uber-standard`.
 
 2. ### Upscaling the assets
 
-   Run your upscaling program on the images within `uber-upscaled`. Note that the new images must be output next to the original files, suffixed with `-upscaled`.
+   Run your upscaling program on the images within `uber-standard`. Note that the new images must be output next to the original files, suffixed with `-upscaled`.
 
 3. ### Post-processing the assets
 
    `build.py post "uber-standard"`
 
-   This will generate the final packs at each quality level, like `uber-game_files-standard-hd`.
+   This will generate the final packs at each quality level, like `uber-standard-hd-game_files`.
