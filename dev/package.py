@@ -18,8 +18,10 @@ def make_zip(src_file: Path):
 def apply_zip(src_zip: Path):
     sha = hashlib.sha256()
     with open(src_zip, "rb") as src_file:
-        while chunk := src_file.read(256 * 1024):
+        chunk = src_file.read(256 * 1024)
+        while chunk:
             sha.update(chunk)
+            chunk = src_file.read(256 * 1024)
     return (src_zip, sha.hexdigest())
 
 
