@@ -14,7 +14,7 @@ quality_levels = [(512, "hd"), (1024, "uhd")]
 
 
 def panic_usage():
-    print("Usage:", "build.py pre PACKS_DIR PACKS_SUFFIX", "build.py post PACKS_DIR", end="\n")
+    print("Usage:", "build.py pre PACKS_DIR PACKS_TAG", "build.py post PACKS_DIR", end="\n")
     raise Exception("Invalid usage")
 
 
@@ -80,7 +80,8 @@ def convert_post(upscaled_file: Path, dest_assets_dir: Path):
     w_original, h_original = identify_dimensions(original_file)
 
     for level in quality_levels:
-        quality_file = Path(f"{dest_assets_dir.name}-{level[1]}").joinpath(original_file.relative_to(dest_assets_dir))
+        dsplit = dest_assets_dir.name.rsplit("-", 1)
+        quality_file = Path(f"{dsplit[0]}-{level[1]}-{dsplit[1]}").joinpath(original_file.relative_to(dest_assets_dir))
         quality_file.parent.mkdir(parents=True, exist_ok=True)
         if w_original >= level[0] and h_original >= level[0]:
             # use original asset if it's high enough quality
@@ -166,7 +167,7 @@ if __name__ == "__main__":
     if command == "pre":
         if len(sys.argv) != 4:
             panic_usage()
-        packs_suffix = sys.argv[3]
+        packs_tag = sys.argv[3]
         pack_whitelist = ["game_files", "io_*", "rvgl_*"]
         for orig_assets_dir in packs_dir.glob("*"):
             if not orig_assets_dir.is_dir() or not any(
@@ -175,7 +176,7 @@ if __name__ == "__main__":
                 continue
 
             override_assets_dir = overrides.joinpath(orig_assets_dir.name)
-            dest_assets_dir = Path("uber-" + orig_assets_dir.name + packs_suffix)
+            dest_assets_dir = Path(f"uber-{packs_tag}-{orig_assets_dir.name}")
 
             pre(orig_assets_dir, override_assets_dir, dest_assets_dir)
     elif command == "post":
